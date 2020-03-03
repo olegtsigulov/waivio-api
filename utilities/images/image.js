@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const sharp = require('sharp');
+const piexifjs = require('piexifjs');
 
 class Image {
   constructor() {
@@ -22,9 +23,11 @@ class Image {
     if (base64) {
       try {
         // eslint-disable-next-line no-buffer-constructor
-        const buffer = new Buffer(base64, 'base64');
-        const body = await this.resizeImage({ buffer, size });
-
+        // const buffer = new Buffer(base64, 'base64');
+        const body = await this.resizeImage({ base64, size });
+        // const data = body.toString('binary');
+        // const res = await piexifjs.remove(data);
+        // buffer = Buffer.from(res, 'binary');
         return new Promise((resolve) => {
           this._s3.upload({ Body: body, Key: `${fileName}${size}` }, (err, data) => {
             if (err) {
@@ -43,14 +46,16 @@ class Image {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async resizeImage({ buffer, size }) {
+  async resizeImage({ base64, size }) {
+    // const data = buffer.toString('binary');
+    const res = await piexifjs.remove(base64);
+    const newBuffer = Buffer.from(res, 'binary');
     if (size === '_small') {
-      return sharp(buffer).rotate(360).resize(34, 34).toBuffer();
+      return sharp(newBuffer).rotate(360).resize(34, 34).toBuffer();
     } if (size === '_medium') {
-      return sharp(buffer).rotate(360).resize(180, 180).toBuffer();
+      return sharp(newBuffer).rotate(360).resize(180, 180).toBuffer();
     }
-
-    return sharp(buffer).rotate(360).toBuffer();
+    return sharp(newBuffer).rotate(360).toBuffer();
   }
 }
 

@@ -22,11 +22,10 @@ const prepareImage = async (req) => {
     });
   });
   let base64 = null;
-
   if (blobImage) {
     const data = fs.readFileSync(blobImage.path);
 
-    base64 = data.toString('base64');
+    base64 = data.toString('binary');
   } else if (imageUrl) {
     base64 = await base64ByUrl(imageUrl);
   }
