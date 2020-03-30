@@ -8,7 +8,6 @@ module.exports = {
         watch: false,
         max_memory_restart: '1G',
         env: {
-            NODE_ENV: 'staging',
             AWS_ENDPOINT: 'sdfgsdrfg345tfg',
             AWS_ACCESS_KEY_ID: 'dfsgdfg345t34gf',
             AWS_SECRET_ACCESS_KEY: 'dsfgdsfg54t3egf',
